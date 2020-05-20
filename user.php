@@ -9,14 +9,18 @@
 		private $city_name;
 		private $username;
 		private $password;
+		private $utc_timestamp;
+		private $offset;
 
-		public function __construct($first_name,$last_name,$city_name,$username,$password)
+		public function __construct($first_name,$last_name,$city_name,$username,$password,$utc_timestamp,$offset)
 		{
 			$this->first_name = $first_name;
 			$this->last_name = $last_name;
 			$this->city_name = $city_name;
 			$this->username = $username;
 			$this->password = $password;
+			$this->utc_timestamp = $utc_timestamp;
+			$this->offset = $offset;
 		}
 
 		public function checkUsername($conn,$username)
@@ -64,17 +68,40 @@
 			return $this->user_id;
 		}
 
+		public function setTimeStamp($utc_timestamp)
+		{
+			$this->utc_timestamp = $utc_timestamp;
+		}
+
+		public function getTimeStamp()
+		{
+			return $this->utc_timestamp;
+		}
+
+		public function setOffset($offset)
+		{
+			$this->offset = $offset;
+		}
+
+		public function getOffset()
+		{
+			return $offset;
+		}
+
 		public function save($conn,$result)
 		{
 			$fn = $this->first_name;
 			$ln = $this->last_name;
 			$city = $this->city_name;
 			$uname = $this->username;
+			$timestamp = $this->utc_timestamp;
+			$off = $this->offset;
 			$this->hashPassword();
-			$pass = $this->password; 
+			$pass = $this->password;
+			 
 			if($result == "none")
 			{
-				$res = mysqli_query($conn,"INSERT INTO user(first_name,last_name,user_city,username,password) VALUES ('$fn','$ln','$city','$uname','$pass')");
+				$res = mysqli_query($conn,"INSERT INTO user(first_name,last_name,user_city,username,password,utctimestamp,offset) VALUES ('$fn','$ln','$city','$uname','$pass','$timestamp','$off')");
 				return $res;
 			}
 		}

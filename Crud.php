@@ -14,3 +14,4 @@
 		public function checkUsername($conn,$username);
 	}
 ?>
+

@@ -1,6 +1,7 @@
 <?php
 	include 'DBConnector.php';
 	include 'user.php';
+	include 'fileUploader.php';
 	session_start();
 	$_SESSION['style'] = "none";
 	if(isset($_POST['btn_save']))
@@ -10,11 +11,19 @@
 		$city = $_POST['city_name'];
 		$username = $_POST['username'];
 		$password = $_POST['password'];
+		$utc_timestamp = $_POST['utc_timestamp'];
+		$offset = $_POST['time_zone_offset'];
+		$file_original_name = basename($_FILES['fileToUpload']['name']);
+		$file_type = strtolower(pathinfo($file_original_name,PATHINFO_EXTENSION));
+		$file_size = $_FILES['fileToUpload']['size'];
+		$tmp_name = $_FILES["fileToUpload"]["tmp_name"];
 
 		$db = new DBConnector;
 		$conn = $db->openDatabase();
 
-		$user = new User($first_name,$last_name,$city,$username,$password);
+		$user = new User($first_name,$last_name,$city,$username,$password,$utc_timestamp,$offset);
+		$uploader = new FileUploader($file_original_name,$file_type,$file_size,$tmp_name);
+		
 		if(!$user->valiteForm())
 		{
 			$user->createFormErrorSessions();
@@ -23,16 +32,22 @@
 		}
 		$result = $user->checkUsername($conn,$username);
 		$_SESSION['style'] = $result;
-		$res = $user->save($conn,$result);
-
-		if($res)
+		$check = $uploader->moveFile();
+		if($check == "")
 		{
-			echo "Save operation was successful";
+			$res = $user->save($conn,$result);
+			$username = $user->getUsername();
+			$file_upload_response = $uploader->uploadFile($conn,$username);
+			if($res && $file_upload_response)
+			{
+				echo "Save operation was successful";
+			}
 		}
 		else
 		{
-			echo "An error occured!";
+			echo $check;
 		}
+		
 	}
 ?>
 <html>
@@ -40,9 +55,11 @@
 	<title>Title goes here</title>
 	<script type="text/javascript" src="validate.js"></script>
 	<link rel="stylesheet" type="text/css" href="validate.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script type="text/javascript" src="timezone.js"></script>
 </head>
 <body>
-	<form method="post" name="user_details" id="user_details" onsubmit="return validateForm()">
+	<form method="post" name="user_details" id="user_details" onsubmit="return validateForm()" enctype="multipart/form-data">
 		<table align="center">
 			<tr>
 				<td>
@@ -73,6 +90,11 @@
 			<tr>
 				<td><input type="password" name="password" placeholder="Password"></td>
 			</tr>
+			<tr>
+				<td><b>Profile image: </b><input type="file" name="fileToUpload"></td>
+			</tr>
+			<input type="hidden" name="utc_timestamp" id="utc_timestamp" value="">
+			<input type="hidden" name="time_zone_offset" id="time_zone_offset" value="">
 			<tr>
 				<td><button type="submit" name="btn_save"><strong>SAVE</strong></button></td>
 			</tr>
