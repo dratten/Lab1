@@ -8,7 +8,7 @@
 		$conn = $db->openDatabase();
 		$username = $_POST['username'];
 		$password = $_POST['password'];
-		$instance = new User("","","",$username,$password);
+		$instance = new User("","","",$username,$password,"","");
 		$instance->setPassword($password);
 		$instance->setUsername($username);
 		if($instance->isPasswordCorrect($conn))
