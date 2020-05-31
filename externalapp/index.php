@@ -27,20 +27,21 @@
 			<legend>Place Order</legend>
 			<input type="text" name="name_of_food" id="name_of_food" required placeholder="Name of Food"><br>
 			<input type="number" name="number_of_units" id="number_of_units" required placeholder="Number of Units"><br>
-			<input type="number" name="unit_price" id="unit_price" required placeholder="Unit Price"><br><br>
+			<input type="number" name="unit_price" id="unit_price" required placeholder="Unit Price"><br>
+			<input type="text" name="api_key" id="api_key" required placeholder="Personal Key"><br><br>
 			<input type="hidden" name="status" id="status" required placeholder="unit_price" value="order placed"><br><br>
-			<button class="btn btn-primary" type="submit">Place order >></button>
+			<button class="btn btn-primary" type="submit" id="btn-place-order">Place order >></button>
 		</fieldset>
 	</form>
 
 	<hr>
 	<h4>2. Feature 2 - Checking Order Status</h4>
 	<hr>
-	<form name="order_status_form" id="order_status_form" method="post" action="<? =$_SERVER['PHP_SELF']; ?>">
+	<form name="order_status_form" id="order_status_form" method="post">
 		<fieldset>
 			<legend>Check Order Status</legend>
-			<input type="number" name="order_id" id="order_id" required placeholder="Order ID"><br><br>
-			<button class="btn btn-warning" type="submit">Check Order Status</button>
+			<input type="text" name="order_id" id="order_id" required placeholder="Order ID"><br><br>
+			<button class="btn btn-warning" id="btn-order-status" type="submit">Check Order Status</button>
 		</fieldset>
 	</form>
 </body>

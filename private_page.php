@@ -12,7 +12,12 @@
 		$key = "";
 		$db = new DBConnector;
 		$conn = $db->openDatabase();
-		$res = mysqli_query($conn, "SELECT api_key FROM user WHERE username = '$username'");
+		$re = mysqli_query($conn, "SELECT id FROM user WHERE username = '$username'");
+		while($row = mysqli_fetch_array($re))
+		{
+			$id = $row['id'];
+		}
+		$res = mysqli_query($conn, "SELECT api_key FROM api_keys WHERE user_id = '$id'");
 		while($row = mysqli_fetch_array($res))
  		{
  			$key = $row['api_key'];

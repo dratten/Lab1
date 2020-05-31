@@ -102,6 +102,12 @@
 			if($result == "none")
 			{
 				$res = mysqli_query($conn,"INSERT INTO user(first_name,last_name,user_city,username,password,utctimestamp,offset) VALUES ('$fn','$ln','$city','$uname','$pass','$timestamp','$off')");
+				$re = mysqli_query($conn,"SELECT id FROM user WHERE username = '$uname'");
+				while($row = mysqli_fetch_array($re))
+				{
+					$id = $row['id'];
+				}
+				$r = mysqli_query($conn,"INSERT INTO api_keys (user_id) VALUES('$id')");
 				return $res;
 			}
 		}

@@ -49,8 +49,14 @@
 
 		public function saveApiKey()
 		{
+			$id = "";
 			$this->api_key = $this->generateApiKey();
-			$save = mysqli_query($this->conn, "UPDATE user SET api_key = '$this->api_key' WHERE username = '$this->username'");
+			$sv = mysqli_query($this->conn, "SELECT id FROM user WHERE username = '$this->username'");
+			while($row = mysqli_fetch_array($sv))
+			{
+				$id = $row['id'];
+			}
+			$save = mysqli_query($this->conn, "UPDATE api_keys SET api_key = '$this->api_key' WHERE user_id = '$id'");
 			return $save;
 		}
 
