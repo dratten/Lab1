@@ -38,7 +38,7 @@
 		{
 			$length = $this->str_length;
 			$chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-			$bytes = openssl_random_pseudo_bytes(3*$length/4+1);
+			$bytes = openssl_random_pseudo_bytes($length/4+1);
 			$repl = unpack(('C2'), $bytes);
 
 			$first = $chars[$repl[1]%62];

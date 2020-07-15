@@ -57,7 +57,7 @@
 		{
 			$db = new DBConnector();
 			$conn = $db->openDatabase();
-			$res = mysqli_query($conn,"INSERT INTO orders (order_name,units,unit_price,order_status) VALUES('$this->meal_name','$this->meal_units','$this->unit_price','$this->status')") or die("Error:".mysqli_error());
+			$res = mysqli_query($conn,"INSERT INTO orders (order_name,units,unit_price,order_status) VALUES('$this->meal_name','$this->meal_units','$this->unit_price','$this->status')");
 			return $res; 
 		}
 
@@ -70,6 +70,7 @@
 			{
 				$this->setStatus($row['order_status']);
 			}
+			return $this->status;
 		}
 
 		public function fetchAllOrders()
@@ -79,17 +80,17 @@
 
 		public function checkApiKey()
 		{
+			$check = "";
 			$db = new DBConnector();
 			$conn = $db->openDatabase();
-			$res = mysqli_query($conn,"SELECT api_key FROM api_keys");
-			while($row = mysqli_fetch_array($res))
+			$user_api_key = $this->user_api_key;
+			$res = mysqli_query($conn,"SELECT api_key FROM api_keys WHERE api_key = '$user_api_key'");
+			$row = mysqli_num_rows($res);
+			if($row > 0)
 			{
-				if($row['api_key'] == $user_api_key)
-				{
-					break;
-				}
+				$check = true;
 			}
-			return true;
+			return $check;
 		}
 
 		public function checkContentType()
